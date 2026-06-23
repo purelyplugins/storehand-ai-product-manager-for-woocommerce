@@ -1,0 +1,587 @@
+/* ── Design tokens ───────────────────────────────────────────────────────── */
+:root {
+  --p-accent:      #FFA07A;
+  --p-accent-dark: #FF8C61;
+  --p-border:      #e8e6df;
+  --p-border-peach:#FFD4C4;
+  --p-bg:          #fafaf8;
+  --p-white:       #ffffff;
+  --p-text:        #2c2c2a;
+  --p-text-2:      #5f5e5a;
+  --p-text-3:      #888780;
+  --p-font:        -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ── Floating action button ──────────────────────────────────────────────── */
+.wppilot-fab {
+  position:        fixed;
+  bottom:          24px;
+  right:           24px;
+  z-index:         100001;
+  width:           52px;
+  height:          52px;
+  border-radius:   50%;
+  border:          none;
+  cursor:          pointer;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      var(--p-accent);
+  box-shadow:      0 2px 8px rgba(0,0,0,0.15);
+  transition:      background 0.15s, box-shadow 0.15s, transform 0.15s;
+  font-family:     var(--p-font);
+  color:           white;
+}
+.wppilot-fab:hover {
+  background:  var(--p-accent-dark);
+  box-shadow:  0 4px 16px rgba(0,0,0,0.18);
+  transform:   translateY(-1px);
+}
+.wppilot-fab svg { width: 20px; height: 20px; }
+
+/* Unread badge */
+.wppilot-badge {
+  position:        absolute;
+  top:             -4px;
+  right:           -4px;
+  min-width:       18px;
+  height:          18px;
+  border-radius:   999px;
+  background:      #EF4444;
+  color:           white;
+  font-size:       10px;
+  font-weight:     700;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         0 4px;
+  border:          2px solid white;
+  font-family:     var(--p-font);
+}
+.wppilot-fab-wrap {
+  position: fixed;
+  bottom:   24px;
+  right:    24px;
+  z-index:  100001;
+}
+.wppilot-fab-wrap .wppilot-fab { position: relative; bottom: auto; right: auto; }
+.wppilot-fab-wrap.panel-open   { visibility: hidden; pointer-events: none; }
+
+/* ── Panel ───────────────────────────────────────────────────────────────── */
+.wppilot-panel {
+  position:       fixed;
+  top:            0;
+  right:          0;
+  bottom:         0;
+  z-index:        100000;
+  width:          400px;
+  background:     var(--p-white);
+  border-left:    1px solid var(--p-border);
+  display:        flex;
+  flex-direction: column;
+  transform:      translateX(100%);
+  transition:     transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-family:    var(--p-font);
+  font-size:      15px;
+  color:          var(--p-text);
+  overflow:       hidden;
+}
+.wppilot-panel.wppilot-open { transform: translateX(0); }
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.wppilot-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         14px 16px;
+  border-bottom:   1px solid var(--p-border);
+  background:      var(--p-white);
+  flex-shrink:     0;
+}
+.wppilot-header-left  { display: flex; align-items: center; gap: 10px; }
+.wppilot-header-icon  {
+  width:           32px;
+  height:          32px;
+  border-radius:   8px;
+  border:          1px solid var(--p-border-peach);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  color:           var(--p-accent);
+  flex-shrink:     0;
+  background:      var(--p-white);
+}
+.wppilot-header-icon svg { width: 16px; height: 16px; }
+.wppilot-header-title {
+  font-size:   16px;
+  font-weight: 600;
+  color:       #2c2c2a;
+  line-height: 1.2;
+  margin:      0;
+}
+.wppilot-header-sub  { font-size: 13px; font-weight: 400; color: #5f5e5a; margin-top: 4px; }
+.wppilot-header-actions { display: flex; gap: 4px; }
+.wppilot-icon-btn {
+  width:           30px;
+  height:          30px;
+  border-radius:   6px;
+  border:          none;
+  background:      transparent;
+  cursor:          pointer;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  color:           var(--p-text-2);
+  transition:      color 0.15s, background 0.15s;
+  padding:         0;
+}
+.wppilot-icon-btn:hover { color: var(--p-accent); background: #fafaf8; }
+.wppilot-icon-btn svg   { width: 15px; height: 15px; }
+
+/* ── Messages area ───────────────────────────────────────────────────────── */
+.wppilot-messages-wrap {
+  flex:           1;
+  position:       relative;
+  overflow:       hidden;
+  display:        flex;
+  flex-direction: column;
+  background:     var(--p-white);
+}
+.wppilot-messages {
+  flex:            1;
+  overflow-y:      auto;
+  padding:         20px 16px 8px;
+  display:         flex;
+  flex-direction:  column;
+  gap:             2px;
+  scroll-behavior: smooth;
+}
+.wppilot-messages::-webkit-scrollbar       { width: 4px; }
+.wppilot-messages::-webkit-scrollbar-track { background: transparent; }
+.wppilot-messages::-webkit-scrollbar-thumb { background: #d4d2cc; border-radius: 999px; }
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.wppilot-empty {
+  flex:            1;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  padding:         32px 24px;
+  text-align:      center;
+  gap:             14px;
+}
+.wppilot-empty-icon {
+  width:           52px;
+  height:          52px;
+  border-radius:   14px;
+  border:          1.5px solid var(--p-border-peach);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  color:           var(--p-accent);
+  background:      var(--p-white);
+}
+.wppilot-empty-icon svg  { width: 26px; height: 26px; }
+.wppilot-empty-title {
+  font-size:   17px;
+  font-weight: 600;
+  color:       var(--p-text);
+  margin:      0;
+}
+.wppilot-empty-sub {
+  font-size:   14px;
+  color:       var(--p-text-2);
+  margin:      0;
+  line-height: 1.5;
+}
+
+/* Conversation starter pills */
+.wppilot-starters {
+  display:         flex;
+  flex-wrap:       wrap;
+  gap:             8px;
+  justify-content: center;
+  padding:         12px 16px;
+}
+.wppilot-starters.hidden { opacity: 0; pointer-events: none; }
+.wppilot-starter {
+  padding:       10px 16px;
+  border-radius: 8px;
+  border:        none;
+  background:    var(--p-accent);
+  color:         white;
+  font-size:     13px;
+  font-weight:   500;
+  cursor:        pointer;
+  transition:    background 0.15s, transform 0.1s;
+  font-family:   var(--p-font);
+  white-space:   nowrap;
+}
+.wppilot-starter:hover {
+  background: var(--p-accent-dark);
+  transform:  translateY(-1px);
+}
+
+/* ── Message rows ────────────────────────────────────────────────────────── */
+.wppilot-row {
+  display:        flex;
+  flex-direction: column;
+  margin-bottom:  8px;
+  animation:      wppilot-fade-up 0.18s ease both;
+  position:       relative;
+}
+.wppilot-row.user { align-items: flex-end; }
+.wppilot-row.ai   { align-items: flex-start; }
+
+.wppilot-bubble {
+  max-width:   80%;
+  padding:     10px 14px;
+  font-size:   14px;
+  line-height: 1.6;
+  word-break:  break-word;
+  white-space: pre-wrap;
+  border-radius: 12px;
+}
+.wppilot-row.user .wppilot-bubble {
+  background: var(--p-white);
+  color:      var(--p-text);
+  border:     1px solid var(--p-border);
+}
+.wppilot-row.ai .wppilot-bubble {
+  background: var(--p-bg);
+  color:      var(--p-text);
+  border:     1px solid var(--p-border);
+}
+.wppilot-row.ai.error .wppilot-bubble {
+  background:   #FEF2F2;
+  border-color: #FECACA;
+  color:        #991B1B;
+}
+
+/* Timestamp — visible on hover */
+.wppilot-timestamp {
+  font-size:  11px;
+  color:      var(--p-text-3);
+  margin-top: 4px;
+  padding:    0 4px;
+  opacity:    0;
+  transition: opacity 0.15s;
+}
+.wppilot-row:hover .wppilot-timestamp { opacity: 1; }
+
+/* Message actions */
+.wppilot-msg-actions {
+  display:    flex;
+  gap:        4px;
+  margin-top: 4px;
+  padding:    0 4px;
+  opacity:    0;
+  transition: opacity 0.15s;
+}
+.wppilot-row:hover .wppilot-msg-actions { opacity: 1; }
+.wppilot-action-btn {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  padding:     3px 8px;
+  border-radius: 5px;
+  border:      1px solid var(--p-border);
+  background:  var(--p-white);
+  color:       var(--p-text-2);
+  font-size:   12px;
+  cursor:      pointer;
+  transition:  color 0.12s, border-color 0.12s;
+  font-family: var(--p-font);
+}
+.wppilot-action-btn:hover { color: var(--p-accent); border-color: var(--p-accent); }
+.wppilot-action-btn svg   { width: 12px; height: 12px; }
+
+/* ── Tool result card ────────────────────────────────────────────────────── */
+.wppilot-tool-card {
+  margin-top:    10px;
+  border-radius: 8px;
+  overflow:      hidden;
+  border:        1px solid;
+  font-size:     13px;
+}
+.wppilot-tool-card.ok   { border-color: #A7F3D0; background: #ECFDF5; }
+.wppilot-tool-card.fail { border-color: #FECACA; background: #FEF2F2; }
+.wppilot-tool-card-header {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  padding:     8px 12px;
+  font-weight: 500;
+}
+.wppilot-tool-card.ok   .wppilot-tool-card-header { color: #065F46; }
+.wppilot-tool-card.fail .wppilot-tool-card-header { color: #991B1B; }
+.wppilot-tool-status-icon {
+  width:           18px;
+  height:          18px;
+  border-radius:   50%;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-shrink:     0;
+  font-size:       11px;
+}
+.wppilot-tool-card.ok   .wppilot-tool-status-icon { background: #6EE7B7; color: #065F46; }
+.wppilot-tool-card.fail .wppilot-tool-status-icon { background: #FCA5A5; color: #991B1B; }
+.wppilot-tool-card-link {
+  display:         flex;
+  align-items:     center;
+  gap:             6px;
+  padding:         7px 12px;
+  border-top:      1px solid #A7F3D0;
+  color:           #047857;
+  font-weight:     500;
+  font-size:       13px;
+  text-decoration: none;
+  transition:      background 0.12s;
+}
+.wppilot-tool-card-link:hover { background: #D1FAE5; }
+.wppilot-tool-card-link svg   { width: 13px; height: 13px; }
+
+/* ── Typing indicator ────────────────────────────────────────────────────── */
+.wppilot-typing-row {
+  display:       flex;
+  align-items:   flex-start;
+  margin-bottom: 8px;
+  animation:     wppilot-fade-up 0.18s ease both;
+}
+.wppilot-typing {
+  display:       flex;
+  align-items:   center;
+  gap:           5px;
+  padding:       10px 14px;
+  background:    var(--p-bg);
+  border:        1px solid var(--p-border);
+  border-radius: 12px;
+}
+.wppilot-dot {
+  width:         6px;
+  height:        6px;
+  border-radius: 50%;
+  background:    var(--p-accent);
+  animation:     wppilot-bounce 1.2s infinite;
+}
+.wppilot-dot:nth-child(2) { animation-delay: 0.15s; }
+.wppilot-dot:nth-child(3) { animation-delay: 0.30s; }
+
+/* ── Scroll to bottom button ─────────────────────────────────────────────── */
+.wppilot-scroll-btn {
+  position:    absolute;
+  bottom:      12px;
+  left:        50%;
+  transform:   translateX(-50%);
+  z-index:     10;
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  padding:     5px 14px;
+  border-radius: 999px;
+  border:      1px solid var(--p-border);
+  background:  var(--p-white);
+  color:       var(--p-text-2);
+  font-size:   12px;
+  font-weight: 500;
+  cursor:      pointer;
+  box-shadow:  0 2px 6px rgba(0,0,0,0.08);
+  transition:  border-color 0.15s, color 0.15s;
+  font-family: var(--p-font);
+  white-space: nowrap;
+}
+.wppilot-scroll-btn:hover { border-color: var(--p-accent); color: var(--p-accent); }
+.wppilot-scroll-btn svg   { width: 13px; height: 13px; }
+
+/* ── Confirmation dialog ─────────────────────────────────────────────────── */
+.wppilot-confirm {
+  background:    var(--p-white);
+  border:        1px solid var(--p-border);
+  border-radius: 12px;
+  padding:       14px;
+  margin-bottom: 10px;
+  animation:     wppilot-fade-up 0.18s ease both;
+  width:         100%;
+}
+.wppilot-confirm-msg     { font-size: 14px; color: var(--p-text); line-height: 1.5; margin-bottom: 6px; }
+.wppilot-confirm-warning { font-size: 12px; color: var(--p-text-2); margin-bottom: 4px; }
+.wppilot-confirm-proceed { font-size: 13px; font-weight: 600; color: var(--p-text); margin-bottom: 10px; }
+.wppilot-confirm-actions { display: flex; gap: 8px; }
+.wppilot-btn-ok {
+  flex: 1; padding: 9px 12px; border-radius: 8px; border: none;
+  cursor: pointer; font-size: 14px; font-weight: 600;
+  background: var(--p-accent); color: white;
+  transition: background 0.15s; font-family: var(--p-font);
+}
+.wppilot-btn-ok:hover:not(:disabled)  { background: var(--p-accent-dark); }
+.wppilot-btn-ok:disabled              { opacity: 0.45; cursor: not-allowed; }
+.wppilot-btn-no {
+  flex: 1; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--p-border);
+  cursor: pointer; font-size: 14px; font-weight: 500;
+  background: var(--p-white); color: var(--p-text-2);
+  transition: border-color 0.15s, color 0.15s; font-family: var(--p-font);
+}
+.wppilot-btn-no:hover { border-color: var(--p-accent); color: var(--p-text); }
+
+/* ── Input area ──────────────────────────────────────────────────────────── */
+.wppilot-input-area {
+  padding:     12px;
+  background:  var(--p-white);
+  border-top:  1px solid var(--p-border);
+  flex-shrink: 0;
+}
+.wppilot-input-wrap {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  background:    var(--p-white);
+  border:        1px solid var(--p-border);
+  border-radius: 24px;
+  padding:       8px 8px 8px 16px;
+  transition:    border-color 0.15s;
+}
+.wppilot-input-wrap:focus-within { border-color: var(--p-accent); }
+.wppilot-textarea {
+  flex: 1; border: none; background: transparent; resize: none;
+  font-size: 14px; font-family: var(--p-font); color: var(--p-text);
+  line-height: 1.5; min-height: 24px; max-height: 120px; outline: none;
+  padding: 0; margin: 0; display: block;
+  box-shadow: none !important; -webkit-appearance: none; appearance: none;
+}
+.wppilot-textarea::placeholder { color: var(--p-text-3); }
+.wppilot-textarea:disabled      { opacity: 0.5; }
+.wppilot-textarea:focus         { box-shadow: none !important; outline: none !important; border: none !important; }
+.wppilot-send-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--p-accent); color: white; flex-shrink: 0;
+  transition: background 0.15s; padding: 0;
+}
+.wppilot-send-btn:hover:not(:disabled) { background: var(--p-accent-dark); }
+.wppilot-send-btn:disabled             { background: var(--p-border); color: var(--p-text-3); cursor: not-allowed; }
+.wppilot-send-btn svg  { width: 15px; height: 15px; }
+.wppilot-input-hint    { font-size: 11px; color: var(--p-text-3); text-align: center; margin-top: 6px; }
+
+/* Image attach button */
+.wppilot-img-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--p-text-3); padding: 0;
+  transition: color 0.15s;
+}
+.wppilot-img-btn:hover:not(:disabled) { color: var(--p-accent); }
+.wppilot-img-btn:disabled             { opacity: 0.4; cursor: not-allowed; }
+.wppilot-img-btn svg                  { width: 16px; height: 16px; }
+
+/* Image preview strip */
+.wppilot-img-preview-row {
+  display:   flex;
+  align-items: flex-start;
+  gap:       8px;
+  padding:   0 0 8px 0;
+  flex-wrap: wrap;
+}
+.wppilot-img-thumb-wrap {
+  position:      relative;
+  width:         60px;
+  height:        60px;
+  border-radius: 8px;
+  overflow:      hidden;
+  border:        1px solid var(--p-border);
+  flex-shrink:   0;
+}
+.wppilot-img-thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wppilot-img-uploading {
+  position: absolute; inset: 0;
+  background: rgba(255,160,122,0.3);
+  display: flex; align-items: center; justify-content: center;
+  animation: wppilot-pulse 1s infinite;
+}
+@keyframes wppilot-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+.wppilot-img-ok {
+  position: absolute; bottom: 3px; right: 3px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #22C55E; color: white; font-size: 10px;
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+}
+.wppilot-img-remove {
+  position: absolute; top: 2px; right: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  border: none; background: rgba(0,0,0,0.5); color: white;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+}
+.wppilot-img-remove svg { width: 9px; height: 9px; }
+.wppilot-img-error {
+  display: flex; align-items: center; gap: 6px; font-size: 12px;
+  color: #EF4444; padding: 4px 8px;
+  background: #FEF2F2; border: 1px solid #FECACA; border-radius: 6px;
+}
+.wppilot-img-error button { border: none; background: none; cursor: pointer; color: #EF4444; display: flex; align-items: center; padding: 0; }
+.wppilot-img-error button svg { width: 11px; height: 11px; }
+
+/* ── Performance ─────────────────────────────────────────────────────────── */
+.wppilot-panel { will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.wppilot-row   { will-change: opacity, transform; }
+
+/* ── Backdrop ────────────────────────────────────────────────────────────── */
+.wppilot-backdrop { position: fixed; inset: 0; z-index: 99999; background: transparent; }
+
+/* ── Load-older button ───────────────────────────────────────────────────── */
+.wppilot-load-older {
+  align-self: center; margin-bottom: 12px; padding: 5px 16px;
+  border-radius: 999px; border: 1px solid var(--p-border);
+  background: var(--p-white); color: var(--p-text-2);
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: border-color 0.15s, color 0.15s; font-family: var(--p-font);
+}
+.wppilot-load-older:hover { border-color: var(--p-accent); color: var(--p-accent); }
+
+/* ── Mobile / tablet (< 768px) ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .wppilot-fab-wrap { bottom: 16px; right: 16px; }
+  .wppilot-panel    { top: 0; left: 0; width: 100%; border-radius: 0; }
+
+  .wppilot-panel::before {
+    content: ''; display: block; width: 32px; height: 3px;
+    background: var(--p-border); border-radius: 999px; margin: 8px auto 0; flex-shrink: 0;
+  }
+
+  .wppilot-icon-btn { width: 44px; height: 44px; }
+  .wppilot-send-btn { width: 42px; height: 42px; }
+  .wppilot-bubble   { font-size: 14px; line-height: 1.55; }
+  .wppilot-input-wrap { padding: 10px 10px 10px 16px; }
+  .wppilot-textarea   { font-size: 16px; }
+  .wppilot-msg-actions { opacity: 1; }
+  .wppilot-timestamp   { opacity: 1; }
+  .wppilot-btn-ok, .wppilot-btn-no { padding: 12px; font-size: 15px; }
+  .wppilot-starters { gap: 8px; }
+  .wppilot-starter  { padding: 10px 16px; font-size: 14px; }
+}
+
+/* ── No hover on touch ───────────────────────────────────────────────────── */
+@media (hover: none) {
+  .wppilot-fab:hover       { transform: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15); background: var(--p-accent); }
+  .wppilot-starter:hover   { transform: none; background: var(--p-accent); }
+  .wppilot-icon-btn:hover  { background: transparent; color: var(--p-text-2); }
+  .wppilot-action-btn:hover { color: var(--p-text-2); border-color: var(--p-border); }
+}
+
+/* ── Reduce motion ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .wppilot-panel { transition: none; }
+  .wppilot-row   { animation: none; }
+  .wppilot-dot   { animation: none; }
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+@keyframes wppilot-fade-up {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes wppilot-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40%           { transform: translateY(-4px); }
+}
