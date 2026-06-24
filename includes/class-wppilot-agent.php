@@ -36,7 +36,7 @@ class WPPilot_Agent {
 			. '- create_product           {name, price?, description?, short_description?, sku?, stock_quantity?, categories?, tags?, image_id?}' . "\n"
 			. '- create_variable_product  {name, attribute_name, variations: [{value, price, sku?, stock_quantity?}], description?, short_description?, categories?, tags?, image_id?}' . "\n"
 			. '- update_price             {product_id, price}' . "\n"
-			. '- edit_product             {product_id, name?, description?, short_description?, sku?, stock_status?, image_id?}  — works on simple and variable products; price/stock on variable must use variation actions' . "\n"
+			. '- edit_product             {product_id, name?, description?, short_description?, sku?, categories?, tags?, stock_status?, image_id?}  — works on simple and variable products; price/stock on variable must use variation actions' . "\n"
 			. '- update_stock             {product_id, quantity}' . "\n"
 			. '- change_status            {product_id, status: publish|draft|private|pending}' . "\n"
 			. '- bulk_update_price        {percentage, category?}  — percentage: 10 for +10%, -5 for -5%; category is optional' . "\n"
@@ -58,10 +58,11 @@ class WPPilot_Agent {
 			. '- When proposing an edit_product with a description, include the first 100 characters of the new description in the confirmation_message so the user can verify the content before confirming.' . "\n"
 			. '- price is always a string like "28.00". Prices must be positive numbers — if the user gives a negative or zero price, use clarify to explain this.' . "\n"
 			. '- categories and tags are arrays of strings.' . "\n"
-			. '- categories and tags must already exist in WooCommerce — never create new ones. If the user specifies a category or tag that does not exist, use clarify to tell them it does not exist and ask if they want to use a different one or create it manually in WooCommerce.' . "\n"
+			. '- categories and tags must already exist in WooCommerce — never create new ones. Do not ask the user to confirm whether a category or tag exists — use the name as provided and attempt the action. The system will return a clear error if the category or tag cannot be found.' . "\n"
 			. '- If the user responds with just a product ID or number (e.g. "#1126") after you asked which product to use, treat it as selecting that product and continue with the intended action.' . "\n"
 			. '- If the user asks you to DO something that is not one of the listed actions (e.g. create a coupon, set up shipping, configure tax), immediately use action "clarify" to say you cannot do that and explain how to do it in WooCommerce admin. Do not ask for details about tasks you cannot execute.' . "\n"
 			. '- If input is ambiguous or contains an invalid value, always use action "clarify" and explain the issue in confirmation_message. Never return non-JSON.' . "\n"
+			. '- Only propose one action per response. If the user asks to update product fields (categories, name, description, etc.) AND change publish status in the same request, use edit_product for the field updates first — offer change_status as a follow-up after confirmation.' . "\n"
 			. '- For products with multiple sizes, colours, or other options, use create_variable_product, not create_product.' . "\n"
 			. '- Before proposing create_variable_product, you must have: name, attribute_name (e.g. "Size"), all variation values, and a price for EVERY variation. If anything is missing, use clarify to collect it conversationally.' . "\n"
 			. '- Never propose create_variable_product without a price for every variation.' . "\n"
@@ -435,6 +436,20 @@ class WPPilot_Agent {
 					if ( $price_val < 0 || $price_val > 999999 ) {
 						$this->security_log( 'out_of_range', [ 'action' => $action, 'param' => 'regular_price', 'value' => $price_val ] );
 						return new WP_Error( 'invalid_price', 'Price must be between 0 and 999,999.' );
+					}
+				}
+				if ( isset( $p['categories'] ) && is_array( $p['categories'] ) ) {
+					foreach ( $p['categories'] as $cat_name ) {
+						if ( ! get_term_by( 'name', sanitize_text_field( $cat_name ), 'product_cat' ) ) {
+							return new WP_Error( 'category_not_found', "The category \"" . sanitize_text_field( $cat_name ) . "\" wasn't found in your store. Please check the spelling or create it in WooCommerce under Products → Categories first." );
+						}
+					}
+				}
+				if ( isset( $p['tags'] ) && is_array( $p['tags'] ) ) {
+					foreach ( $p['tags'] as $tag_name ) {
+						if ( ! get_term_by( 'name', sanitize_text_field( $tag_name ), 'product_tag' ) ) {
+							return new WP_Error( 'tag_not_found', "The tag \"" . sanitize_text_field( $tag_name ) . "\" wasn't found in your store. Please check the spelling or create it in WooCommerce under Products → Tags first." );
+						}
 					}
 				}
 				break;

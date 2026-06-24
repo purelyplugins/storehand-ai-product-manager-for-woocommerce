@@ -502,13 +502,23 @@ class WPPilot_Tool_Executor {
 			$changes['stock_status'] = [ 'before' => $before, 'after' => $args['stock_status'] ];
 		}
 		if ( isset( $args['categories'] ) ) {
+			$category_ids = $this->get_or_create_term_ids( $args['categories'], 'product_cat' );
+			if ( count( $category_ids ) !== count( $args['categories'] ) ) {
+				$missing = implode( '", "', $args['categories'] );
+				return [ 'success' => false, 'error' => "The category \"{$missing}\" wasn't found in your store. Please check the spelling or create it in WooCommerce under Products → Categories first." ];
+			}
 			$before_names = $this->get_term_names( $product->get_category_ids(), 'product_cat' );
-			$product->set_category_ids( $this->get_or_create_term_ids( $args['categories'], 'product_cat' ) );
+			$product->set_category_ids( $category_ids );
 			$changes['categories'] = [ 'before' => $before_names ?: '(none)', 'after' => implode( ', ', $args['categories'] ) ];
 		}
 		if ( isset( $args['tags'] ) ) {
+			$tag_ids = $this->get_or_create_term_ids( $args['tags'], 'product_tag' );
+			if ( count( $tag_ids ) !== count( $args['tags'] ) ) {
+				$missing = implode( '", "', $args['tags'] );
+				return [ 'success' => false, 'error' => "The tag \"{$missing}\" wasn't found in your store. Please check the spelling or create it in WooCommerce under Products → Tags first." ];
+			}
 			$before_names = $this->get_term_names( $product->get_tag_ids(), 'product_tag' );
-			$product->set_tag_ids( $this->get_or_create_term_ids( $args['tags'], 'product_tag' ) );
+			$product->set_tag_ids( $tag_ids );
 			$changes['tags'] = [ 'before' => $before_names ?: '(none)', 'after' => implode( ', ', $args['tags'] ) ];
 		}
 		if ( ! empty( $args['image_id'] ) ) {

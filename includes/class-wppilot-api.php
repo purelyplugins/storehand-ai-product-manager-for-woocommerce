@@ -215,7 +215,7 @@ class WPPilot_API {
 
 			return new WP_REST_Response( [
 				'type'        => 'confirmation_required',
-				'message'     => $agent_result['message'] ?: $this->build_confirmation_message( $agent_result['action'], $agent_result['parameters'] ),
+				'message'     => $this->build_confirmation_message( $agent_result['action'], $agent_result['parameters'] ),
 				'action_name' => $this->build_action_label( $agent_result['action'], $agent_result['parameters'] ),
 				'session_id'  => $session_id,
 			] );
